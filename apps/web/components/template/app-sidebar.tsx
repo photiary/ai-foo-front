@@ -45,8 +45,13 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: '/',
       icon: IconDashboard,
+    },
+    {
+      title: '식사 이미지 분석',
+      url: '/food/analysis',
+      icon: IconCamera,
     },
     {
       title: 'Lifecycle',
@@ -159,8 +164,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     const handleGetCount = async () => {
       try {
-        const data = await fetchCount(1)
-        setCounter(data.amount)
+        // const data = await fetchCount(1)
+        setCounter(1)
       } catch (error) {
         console.error(error)
       }

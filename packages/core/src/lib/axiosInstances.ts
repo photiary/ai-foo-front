@@ -8,6 +8,7 @@ const defaultHeaders = {
 
 // Create an instance for unauthenticated requests
 const publicInstance = axios.create({
+  baseURL: typeof window !== 'undefined' ? window.location.origin : '',
   headers: defaultHeaders,
 })
 

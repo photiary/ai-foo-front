@@ -34,6 +34,7 @@ export const postFoodAnalysis = async (image: File, status: string) => {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    timeout: 300000,
   })
   return response.data as FoodAnalysisResponse
 }
