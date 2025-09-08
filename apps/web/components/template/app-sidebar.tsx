@@ -54,6 +54,11 @@ const data = {
       icon: IconCamera,
     },
     {
+      title: '분석 목록',
+      url: '/food/analysis/list',
+      icon: IconListDetails,
+    },
+    {
       title: 'Lifecycle',
       url: '#',
       icon: IconListDetails,

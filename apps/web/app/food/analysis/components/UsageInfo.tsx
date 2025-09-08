@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@workspace/ui/components/badge'
 import { Clock, CreditCard, Zap } from 'lucide-react'
 import type { UsageInfo, BillingInfo } from '@workspace/core/types'
+import { formatCost, formatDuration } from '@/lib/formatUtils'
 
 interface UsageInfoProps {
   usage: UsageInfo
@@ -11,19 +12,6 @@ interface UsageInfoProps {
 }
 
 export function UsageInfo({ usage, billing }: UsageInfoProps) {
-  const formatDuration = (ms: number) => {
-    if (ms < 1000) return `${ms}ms`
-    if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
-    return `${(ms / 60000).toFixed(1)}m`
-  }
-
-  const formatCost = (cost: number, currency: string) => {
-    if (currency === 'USD') {
-      const koreanWon = cost * 1400 // 환율 1,400원으로 계산
-      return `$ ${cost.toFixed(7)} ₩ ${koreanWon.toFixed(7)}`
-    }
-    return `${cost.toFixed(7)} ${currency}`
-  }
 
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:shadow-xs grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 lg:grid-cols-4">

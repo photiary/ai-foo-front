@@ -3,18 +3,65 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@workspace/ui/components/card'
 import { Badge } from '@workspace/ui/components/badge'
 import type { FoodItem } from '@workspace/core/types'
+import { useState, useEffect } from 'react'
 
 interface FoodImageDisplayProps {
   imageUrl: string
   foods: FoodItem[]
+  imageSize?: string
 }
 
-export function FoodImageDisplay({ imageUrl, foods }: FoodImageDisplayProps) {
+export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDisplayProps) {
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null)
+  const [displayDimensions, setDisplayDimensions] = useState<{ width: number; height: number } | null>(null)
+
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
+      
+      // 표시된 이미지의 실제 크기 계산
+      const imgElement = img
+      const maxWidth = 800 // CSS max-w-full의 기본값
+      const aspectRatio = img.naturalWidth / img.naturalHeight
+      
+      let displayWidth = img.naturalWidth
+      let displayHeight = img.naturalHeight
+      
+      if (displayWidth > maxWidth) {
+        displayWidth = maxWidth
+        displayHeight = maxWidth / aspectRatio
+      }
+      
+      setDisplayDimensions({ width: displayWidth, height: displayHeight })
+    }
+    img.src = imageUrl
+  }, [imageUrl])
+
+  // 이미지 크기 비율 계산
+  const getScaleRatio = () => {
+    if (!imageDimensions || !displayDimensions) return { scaleX: 1, scaleY: 1 }
+    
+    return {
+      scaleX: displayDimensions.width / imageDimensions.width,
+      scaleY: displayDimensions.height / imageDimensions.height
+    }
+  }
+
+  const { scaleX, scaleY } = getScaleRatio()
+
   return (
     <Card className="@container/card">
       <CardHeader>
         <CardTitle>분석된 음식 이미지</CardTitle>
-        <CardDescription>AI가 인식한 음식들의 위치가 표시됩니다</CardDescription>
+        <CardDescription>
+          AI가 인식한 음식들의 위치가 표시됩니다
+          {imageSize && (
+            <span className="ml-2 text-sm text-muted-foreground">
+              (원본 크기: {imageSize})
+            </span>
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="relative inline-block">
@@ -22,6 +69,7 @@ export function FoodImageDisplay({ imageUrl, foods }: FoodImageDisplayProps) {
             src={imageUrl}
             alt="분석된 음식 이미지"
             className="max-w-full h-auto rounded-lg shadow-md"
+            style={{ maxWidth: '800px' }}
           />
           {/* 음식 라벨 오버레이 */}
           {foods.map((food, index) => (
@@ -29,8 +77,8 @@ export function FoodImageDisplay({ imageUrl, foods }: FoodImageDisplayProps) {
               key={index}
               className="absolute"
               style={{
-                left: `${food.position.x}px`,
-                top: `${food.position.y}px`,
+                left: `${food.position.x * scaleX}px`,
+                top: `${food.position.y * scaleY}px`,
                 transform: 'translate(-50%, -100%)',
               }}
             >

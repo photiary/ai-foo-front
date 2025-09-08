@@ -12,11 +12,7 @@ import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
 import { Play, RotateCcw } from 'lucide-react'
 import { postFoodAnalysis } from '../foodAPI'
 import type { FoodAnalysisResponse } from '@workspace/core/types'
-import { FoodImageDisplay } from './components/FoodImageDisplay'
-import { FoodList } from './components/FoodList'
-import { AISuggestions } from './components/AISuggestions'
-import { NutritionChart } from './components/NutritionChart'
-import { UsageInfo } from './components/UsageInfo'
+import { FoodAnalysisResult } from './components/FoodAnalysisResult'
 import { LoadingComponent } from './components/LoadingComponent'
 import { TagInput } from './components/TagInput'
 
@@ -187,35 +183,10 @@ export default function FoodAnalysisPage() {
 
               {/* 분석 결과 섹션들 */}
               {analysisResult && !isLoading && (
-                <>
-                  {/* 음식 이미지와 라벨 표시 */}
-                  <div className="px-4 lg:px-6">
-                    <FoodImageDisplay
-                      imageUrl={imagePreview!}
-                      foods={analysisResult.foods}
-                    />
-                  </div>
-
-                  {/* 음식 목록 */}
-                  <FoodList foods={analysisResult.foods} />
-
-                  {/* AI 제안 */}
-                  <AISuggestions
-                    suitability={analysisResult.suitability}
-                    suggestion={analysisResult.suggestion}
-                  />
-
-                  {/* 영양 정보 차트 */}
-                  <div className="px-4 lg:px-6">
-                    <NutritionChart foods={analysisResult.foods} />
-                  </div>
-
-                  {/* 사용량 및 과금 정보 */}
-                  <UsageInfo
-                    usage={analysisResult.usage}
-                    billing={analysisResult.billing}
-                  />
-                </>
+                <FoodAnalysisResult
+                  analysisResult={analysisResult}
+                  imageUrl={imagePreview!}
+                />
               )}
             </div>
           </div>

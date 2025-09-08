@@ -2,6 +2,7 @@
 import { publicApi } from '@workspace/core/api'
 import type { 
   FoodAnalysisResponse,
+  FoodAnalysisListItem,
   FoodItem,
   Position,
   BillingInfo,

@@ -36,6 +36,18 @@ export interface FoodAnalysisResponse {
   suggestion: string
   usage: UsageInfo
   billing: BillingInfo
+  imageSize: string
+}
+
+export interface FoodAnalysisListItem {
+  id: number
+  modelName?: string
+  imageWidth?: number
+  imageHeight?: number
+  requestDurationMs?: number
+  totalTokens?: number
+  totalCost?: number
+  createdAt?: string
 }
 
 export interface ChatRequest {
