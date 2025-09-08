@@ -83,15 +83,15 @@ export function NutritionChart({ foods }: NutritionChartProps) {
           </svg>
           영양 균형
         </div>
-        <div className="h-48 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="min-h-[200px] w-full">
+          <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={20}
-                outerRadius={50}
+                innerRadius={30}
+                outerRadius={80}
                 paddingAngle={1}
                 dataKey="value"
                 startAngle={90}
