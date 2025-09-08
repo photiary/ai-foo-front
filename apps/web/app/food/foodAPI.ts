@@ -50,3 +50,17 @@ export const fetchFoodAnalysisDetail = async (id: number) => {
   const response = await publicApi.get(`/v1/food/analysis/${id}`)
   return response.data as FoodAnalysisResponse
 }
+
+/**
+ * 업로드된 음식 이미지를 조회한다.
+ *
+ * @param fileName 이미지 파일명
+ * @returns Blob (이미지 데이터)
+ */
+export const fetchFoodImage = async (fileName: string) => {
+  const response = await publicApi.get('/v1/food/analysis/image', {
+    params: { fileName },
+    responseType: 'blob',
+  })
+  return response.data as Blob
+}

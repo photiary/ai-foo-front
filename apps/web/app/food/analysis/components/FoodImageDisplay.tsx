@@ -6,7 +6,7 @@ import type { FoodItem } from '@workspace/core/types'
 import { useState, useEffect } from 'react'
 
 interface FoodImageDisplayProps {
-  imageUrl: string
+  imageUrl: string | null
   foods: FoodItem[]
   imageSize?: string
 }
@@ -16,6 +16,8 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
   const [displayDimensions, setDisplayDimensions] = useState<{ width: number; height: number } | null>(null)
 
   useEffect(() => {
+    if (!imageUrl) return
+    
     const img = new Image()
     img.onload = () => {
       setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
@@ -64,33 +66,39 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="relative inline-block">
-          <img
-            src={imageUrl}
-            alt="분석된 음식 이미지"
-            className="max-w-full h-auto rounded-lg shadow-md"
-            style={{ maxWidth: '800px' }}
-          />
-          {/* 음식 라벨 오버레이 */}
-          {foods.map((food, index) => (
-            <div
-              key={index}
-              className="absolute"
-              style={{
-                left: `${food.position.x * scaleX}px`,
-                top: `${food.position.y * scaleY}px`,
-                transform: 'translate(-50%, -100%)',
-              }}
-            >
-              <Badge
-                variant="default"
-                className="bg-primary/90 text-primary-foreground shadow-lg"
+        {imageUrl ? (
+          <div className="relative inline-block">
+            <img
+              src={imageUrl}
+              alt="분석된 음식 이미지"
+              className="max-w-full h-auto rounded-lg shadow-md"
+              style={{ maxWidth: '800px' }}
+            />
+            {/* 음식 라벨 오버레이 */}
+            {foods.map((food, index) => (
+              <div
+                key={index}
+                className="absolute"
+                style={{
+                  left: `${food.position.x * scaleX}px`,
+                  top: `${food.position.y * scaleY}px`,
+                  transform: 'translate(-50%, -100%)',
+                }}
               >
-                {food.name}
-              </Badge>
-            </div>
-          ))}
-        </div>
+                <Badge
+                  variant="default"
+                  className="bg-primary/90 text-primary-foreground shadow-lg"
+                >
+                  {food.name}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-64 bg-muted rounded-lg">
+            <p className="text-muted-foreground">이미지를 불러올 수 없습니다.</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   )

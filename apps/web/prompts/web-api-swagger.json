@@ -185,6 +185,45 @@
           }
         }
       }
+    },
+    "/v1/food/analysis/image": {
+      "get": {
+        "tags": [
+          "Food"
+        ],
+        "summary": "Get uploaded food image",
+        "description": "Serve image stored in 'data/uploads' by fileName query parameter",
+        "operationId": "getImage",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -230,6 +269,12 @@
           },
           "billing": {
             "$ref": "#/components/schemas/BillingInfo"
+          },
+          "imageSize": {
+            "type": "string"
+          },
+          "imageFileName": {
+            "type": "string"
           }
         }
       },

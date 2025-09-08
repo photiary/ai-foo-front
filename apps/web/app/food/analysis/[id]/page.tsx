@@ -34,9 +34,12 @@ export default function FoodAnalysisDetailPage() {
         const data = await fetchFoodAnalysisDetail(id)
         setAnalysisResult(data)
         
-        // 이미지 URL 생성 (실제 구현에서는 서버에서 제공하는 이미지 URL을 사용)
-        // 여기서는 예시로 placeholder 이미지를 사용
-        setImageUrl(`/api/food/analysis/${id}/image`)
+        // 이미지 파일명이 있는 경우 이미지 URL 설정
+        if (data.imageFileName) {
+          // API URL을 직접 사용
+          const imageApiUrl = `/v1/food/analysis/image?fileName=${encodeURIComponent(data.imageFileName)}`
+          setImageUrl(imageApiUrl)
+        }
       } catch (err) {
         setError('분석 상세 정보를 불러오는 중 오류가 발생했습니다.')
         console.error('Detail loading error:', err)
@@ -47,6 +50,7 @@ export default function FoodAnalysisDetailPage() {
 
     loadAnalysisDetail()
   }, [params.id])
+
 
   const handleBackToList = () => {
     router.push('/food/analysis/list')
@@ -140,7 +144,7 @@ export default function FoodAnalysisDetailPage() {
               {analysisResult && !isLoading && (
                 <FoodAnalysisResult
                   analysisResult={analysisResult}
-                  imageUrl={imageUrl || undefined}
+                  imageUrl={imageUrl}
                 />
               )}
 

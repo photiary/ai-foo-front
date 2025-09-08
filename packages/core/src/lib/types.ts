@@ -37,6 +37,7 @@ export interface FoodAnalysisResponse {
   usage: UsageInfo
   billing: BillingInfo
   imageSize: string
+  imageFileName: string
 }
 
 export interface FoodAnalysisListItem {

@@ -65,7 +65,7 @@ export function NavMain({
                 asChild 
                 tooltip={item.title} 
                 isActive={isActive(item.url)}
-                className={isActive(item.url) ? " data-[active=true]:bg-sidebar-accent" : ""}
+                className={isActive(item.url) ? "data-[active=true]:bg-sidebar-accent" : ""}
               >
                 <a href={item.url}>
                   {item.icon && <item.icon />}

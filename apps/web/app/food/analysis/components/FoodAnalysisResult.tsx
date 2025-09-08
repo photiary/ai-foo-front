@@ -10,22 +10,20 @@ import { UsageInfo } from './UsageInfo'
 
 interface FoodAnalysisResultProps {
   analysisResult: FoodAnalysisResponse
-  imageUrl?: string
+  imageUrl?: string | null
 }
 
 export function FoodAnalysisResult({ analysisResult, imageUrl }: FoodAnalysisResultProps) {
   return (
     <>
       {/* 음식 이미지와 라벨 표시 */}
-      {imageUrl && (
-        <div className="px-4 lg:px-6">
-          <FoodImageDisplay
-            imageUrl={imageUrl}
-            foods={analysisResult.foods}
-            imageSize={analysisResult.imageSize}
-          />
-        </div>
-      )}
+      <div className="px-4 lg:px-6">
+        <FoodImageDisplay
+          imageUrl={imageUrl}
+          foods={analysisResult.foods}
+          imageSize={analysisResult.imageSize}
+        />
+      </div>
 
       {/* 음식 목록 */}
       <FoodList foods={analysisResult.foods} />
