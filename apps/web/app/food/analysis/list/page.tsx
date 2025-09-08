@@ -42,13 +42,11 @@ export default function FoodAnalysisListPage() {
 
         // 타입 가드 함수 추가 (외부에 빼도 좋음)
         function isFoodAnalysisResponseArray(data: unknown): data is FoodAnalysisResponse[] {
-          return Array.isArray(data) && data.every(item => 'id' in item && 'usage' in item && 'billing' in item)
+          return Array.isArray(data) && data.every((item) => 'id' in item && 'usage' in item && 'billing' in item)
         }
 
         // API가 FoodAnalysisResponse[]를 반환하므로 변환
-        const convertedData = isFoodAnalysisResponseArray(responseData)
-          ? responseData.map(convertToListItem)
-          : []
+        const convertedData = isFoodAnalysisResponseArray(responseData) ? responseData.map(convertToListItem) : []
 
         setAnalysisList(convertedData)
       } catch (err) {
@@ -65,7 +63,6 @@ export default function FoodAnalysisListPage() {
   const handleRowClick = (id: number) => {
     router.push(`/food/analysis/${id}`)
   }
-
 
   if (isLoading) {
     return (
@@ -85,7 +82,7 @@ export default function FoodAnalysisListPage() {
               <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
                 <div className="px-4 lg:px-6">
                   <div className="text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                    <div className="border-primary mx-auto h-8 w-8 animate-spin rounded-full border-b-2"></div>
                     <p className="text-muted-foreground mt-2">분석 목록을 불러오는 중...</p>
                   </div>
                 </div>
@@ -114,10 +111,8 @@ export default function FoodAnalysisListPage() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               {/* 헤더 섹션 */}
               <div className="px-4 lg:px-6">
-                <div className="text-center mb-6">
-                  <h1 className="text-3xl font-bold mb-2">식사 이미지 분석 목록</h1>
-                  <p className="text-muted-foreground">이전 분석 결과들을 확인하고 관리하세요</p>
-                </div>
+                <h1 className="mb-2 text-3xl font-bold">식사 이미지 분석 목록</h1>
+                <p className="text-muted-foreground">이전 분석 결과들을 확인하고 관리하세요</p>
               </div>
 
               {/* 에러 메시지 */}
@@ -136,18 +131,13 @@ export default function FoodAnalysisListPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>분석 기록</CardTitle>
-                    <CardDescription>
-                      총 {analysisList.length}개의 분석 결과가 있습니다
-                    </CardDescription>
+                    <CardDescription>총 {analysisList.length}개의 분석 결과가 있습니다</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {analysisList.length === 0 ? (
-                      <div className="text-center py-8">
+                      <div className="py-8 text-center">
                         <p className="text-muted-foreground">아직 분석 결과가 없습니다.</p>
-                        <Button 
-                          className="mt-4" 
-                          onClick={() => router.push('/food/analysis')}
-                        >
+                        <Button className="mt-4" onClick={() => router.push('/food/analysis')}>
                           첫 분석 시작하기
                         </Button>
                       </div>
@@ -168,46 +158,39 @@ export default function FoodAnalysisListPage() {
                           </TableHeader>
                           <TableBody>
                             {analysisList.map((item) => (
-                              <TableRow 
+                              <TableRow
                                 key={item.id}
-                                className="cursor-pointer hover:bg-muted/50"
+                                className="hover:bg-muted/50 cursor-pointer"
                                 onClick={() => handleRowClick(item.id)}
                               >
-                                <TableCell className="font-medium">
-                                  #{item.id}
-                                </TableCell>
+                                <TableCell className="font-medium">#{item.id}</TableCell>
                                 <TableCell>
-                                  <Badge variant="outline">
-                                    {item.modelName || 'N/A'}
-                                  </Badge>
+                                  <Badge variant="outline">{item.modelName || 'N/A'}</Badge>
                                 </TableCell>
                                 <TableCell>
                                   {item.imageWidth && item.imageHeight
                                     ? `${item.imageWidth} × ${item.imageHeight}`
-                                    : 'N/A'
-                                  }
+                                    : 'N/A'}
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1">
-                                    <Zap className="h-4 w-4 text-muted-foreground" />
+                                    <Zap className="text-muted-foreground h-4 w-4" />
                                     {item.totalTokens?.toLocaleString() || 'N/A'}
                                   </div>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1">
-                                    <CreditCard className="h-4 w-4 text-muted-foreground" />
+                                    <CreditCard className="text-muted-foreground h-4 w-4" />
                                     {formatCost(item.totalCost)}
                                   </div>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex items-center gap-1">
-                                    <Clock className="h-4 w-4 text-muted-foreground" />
+                                    <Clock className="text-muted-foreground h-4 w-4" />
                                     {formatDuration(item.requestDurationMs)}
                                   </div>
                                 </TableCell>
-                                <TableCell>
-                                  {formatDate(item.createdAt)}
-                                </TableCell>
+                                <TableCell>{formatDate(item.createdAt)}</TableCell>
                                 <TableCell>
                                   <Button
                                     variant="ghost"

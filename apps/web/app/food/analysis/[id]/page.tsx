@@ -33,7 +33,7 @@ export default function FoodAnalysisDetailPage() {
 
         const data = await fetchFoodAnalysisDetail(id)
         setAnalysisResult(data)
-        
+
         // 이미지 파일명이 있는 경우 이미지 URL 설정
         if (data.imageFileName) {
           // API URL을 직접 사용
@@ -103,27 +103,15 @@ export default function FoodAnalysisDetailPage() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               {/* 헤더 섹션 */}
               <div className="px-4 lg:px-6">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleBackToList}
-                    >
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      목록으로
-                    </Button>
                     <div>
-                      <h1 className="text-3xl font-bold mb-2">식사 이미지 분석 상세</h1>
+                      <h1 className="mb-2 text-3xl font-bold">식사 이미지 분석 상세</h1>
                       <p className="text-muted-foreground">분석 ID: #{params.id}</p>
                     </div>
                   </div>
-                  <Button
-                    onClick={handleNewAnalysis}
-                    className="px-6"
-                  >
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    새 분석하기
+                  <Button onClick={handleNewAnalysis} className="px-6">
+                    <RotateCcw className="mr-2 h-4 w-4" />새 분석하기
                   </Button>
                 </div>
               </div>
@@ -141,10 +129,7 @@ export default function FoodAnalysisDetailPage() {
 
               {/* 분석 결과 섹션들 */}
               {analysisResult && !isLoading && (
-                <FoodAnalysisResult
-                  analysisResult={analysisResult}
-                  imageUrl={imageUrl}
-                />
+                <FoodAnalysisResult analysisResult={analysisResult} imageUrl={imageUrl} />
               )}
 
               {/* 분석 결과가 없는 경우 */}
@@ -152,15 +137,13 @@ export default function FoodAnalysisDetailPage() {
                 <div className="px-4 lg:px-6">
                   <Card>
                     <CardContent className="pt-6">
-                      <div className="text-center py-8">
+                      <div className="py-8 text-center">
                         <p className="text-muted-foreground mb-4">분석 결과를 찾을 수 없습니다.</p>
-                        <div className="flex gap-2 justify-center">
+                        <div className="flex justify-center gap-2">
                           <Button onClick={handleBackToList} variant="outline">
                             목록으로 돌아가기
                           </Button>
-                          <Button onClick={handleNewAnalysis}>
-                            새 분석 시작하기
-                          </Button>
+                          <Button onClick={handleNewAnalysis}>새 분석 시작하기</Button>
                         </div>
                       </div>
                     </CardContent>

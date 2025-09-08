@@ -2,7 +2,15 @@
 
 import React, { useState, useRef } from 'react'
 import { Button } from '@workspace/ui/components/button'
-import { Card, CardContent, CardHeader, CardTitle, CardAction, CardDescription, CardFooter } from '@workspace/ui/components/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardFooter,
+} from '@workspace/ui/components/card'
 import { Badge } from '@workspace/ui/components/badge'
 import { Input } from '@workspace/ui/components/input'
 import { Label } from '@workspace/ui/components/label'
@@ -13,7 +21,7 @@ import { Play, RotateCcw } from 'lucide-react'
 import { postFoodAnalysis } from '../foodAPI'
 import type { FoodAnalysisResponse } from '@workspace/core/types'
 import { FoodAnalysisResult } from './components/FoodAnalysisResult'
-import { LoadingComponent } from './components/LoadingComponent'
+import { LoadingComponent } from '@/app/food/analysis/components/LoadingComponent'
 import { TagInput } from './components/TagInput'
 
 export default function FoodAnalysisPage() {
@@ -88,10 +96,8 @@ export default function FoodAnalysisPage() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               {/* 헤더 섹션 */}
               <div className="px-4 lg:px-6">
-                <div className="text-center mb-6">
-                  <h1 className="text-3xl font-bold mb-2">식사 이미지 분석</h1>
-                  <p className="text-muted-foreground">음식 사진을 업로드하고 영양 정보를 분석해보세요</p>
-                </div>
+                <h1 className="mb-2 text-3xl font-bold">식사 이미지 분석</h1>
+                <p className="text-muted-foreground">음식 사진을 업로드하고 영양 정보를 분석해보세요</p>
               </div>
 
               {/* 사용자 상태 입력 섹션 */}
@@ -120,7 +126,9 @@ export default function FoodAnalysisPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label htmlFor="image-upload" className="block mb-3">음식 이미지 선택</Label>
+                      <Label htmlFor="image-upload" className="mb-3 block">
+                        음식 이미지 선택
+                      </Label>
                       <Input
                         id="image-upload"
                         type="file"
@@ -129,13 +137,13 @@ export default function FoodAnalysisPage() {
                         ref={fileInputRef}
                       />
                     </div>
-                    
+
                     {imagePreview && (
                       <div className="mt-4">
                         <img
                           src={imagePreview}
                           alt="업로드된 이미지"
-                          className="max-w-md mx-auto rounded-lg shadow-md"
+                          className="mx-auto max-w-md rounded-lg shadow-md"
                         />
                       </div>
                     )}
@@ -155,12 +163,7 @@ export default function FoodAnalysisPage() {
                     <Play className="mr-2 h-4 w-4" />
                     {isLoading ? '분석 중...' : '분석 시작'}
                   </Button>
-                  <Button
-                    onClick={handleReset}
-                    variant="outline"
-                    size="lg"
-                    className="px-8 py-3"
-                  >
+                  <Button onClick={handleReset} variant="outline" size="lg" className="px-8 py-3">
                     <RotateCcw className="mr-2 h-4 w-4" />
                     초기화
                   </Button>
@@ -183,10 +186,7 @@ export default function FoodAnalysisPage() {
 
               {/* 분석 결과 섹션들 */}
               {analysisResult && !isLoading && (
-                <FoodAnalysisResult
-                  analysisResult={analysisResult}
-                  imageUrl={imagePreview!}
-                />
+                <FoodAnalysisResult analysisResult={analysisResult} imageUrl={imagePreview!} />
               )}
             </div>
           </div>
@@ -202,38 +202,42 @@ async function resizeImage(file: File, maxSize: number): Promise<File> {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')!
     const img = new Image()
-    
+
     img.onload = () => {
       const { width, height } = img
       const maxDimension = Math.max(width, height)
-      
+
       if (maxDimension <= maxSize) {
         resolve(file)
         return
       }
-      
+
       const scale = maxSize / maxDimension
       const newWidth = Math.round(width * scale)
       const newHeight = Math.round(height * scale)
-      
+
       canvas.width = newWidth
       canvas.height = newHeight
-      
+
       ctx.drawImage(img, 0, 0, newWidth, newHeight)
-      
-      canvas.toBlob((blob) => {
-        if (blob) {
-          const resizedFile = new File([blob], file.name, {
-            type: file.type,
-            lastModified: Date.now(),
-          })
-          resolve(resizedFile)
-        } else {
-          resolve(file)
-        }
-      }, file.type, 0.9)
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            const resizedFile = new File([blob], file.name, {
+              type: file.type,
+              lastModified: Date.now(),
+            })
+            resolve(resizedFile)
+          } else {
+            resolve(file)
+          }
+        },
+        file.type,
+        0.9
+      )
     }
-    
+
     img.src = URL.createObjectURL(file)
   })
 }

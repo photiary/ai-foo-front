@@ -22,9 +22,9 @@ export interface BillingInfo {
 }
 
 export interface UsageInfo {
-  promptTokens: number | null
-  completionTokens: number | null
-  totalTokens: number | null
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
   modelName: string
   requestDurationMs: number
 }
