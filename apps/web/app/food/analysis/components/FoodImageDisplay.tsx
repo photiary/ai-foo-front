@@ -24,15 +24,22 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
       
       // 표시된 이미지의 실제 크기 계산
       const imgElement = img
-      const maxWidth = 800 // CSS max-w-full의 기본값
+      const maxWidth = 1024 // 최대 1024px로 제한
+      const maxHeight = 1024 // 최대 1024px로 제한
       const aspectRatio = img.naturalWidth / img.naturalHeight
       
       let displayWidth = img.naturalWidth
       let displayHeight = img.naturalHeight
       
+      // 가로와 세로 모두 1024px를 초과하지 않도록 조정
       if (displayWidth > maxWidth) {
         displayWidth = maxWidth
         displayHeight = maxWidth / aspectRatio
+      }
+      
+      if (displayHeight > maxHeight) {
+        displayHeight = maxHeight
+        displayWidth = maxHeight * aspectRatio
       }
       
       setDisplayDimensions({ width: displayWidth, height: displayHeight })
@@ -72,7 +79,7 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
               src={imageUrl}
               alt="분석된 음식 이미지"
               className="max-w-full h-auto rounded-lg shadow-md"
-              style={{ maxWidth: '800px' }}
+              style={{ maxWidth: '1024px', maxHeight: '1024px' }}
             />
             {/* 음식 라벨 오버레이 */}
             {foods.map((food, index) => (

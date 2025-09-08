@@ -21,7 +21,7 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
           <CardDescription>Token 사용량</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums flex items-center gap-2">
             <Zap className="h-5 w-5" />
-            {usage.totalTokens.toLocaleString()}
+            {usage.totalTokens?.toLocaleString() ?? '0'}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -32,11 +32,11 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">입력 토큰</span>
-              <span className="font-medium">{usage.promptTokens.toLocaleString()}</span>
+              <span className="font-medium">{usage.promptTokens?.toLocaleString() ?? '0'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-muted-foreground">출력 토큰</span>
-              <span className="font-medium">{usage.completionTokens.toLocaleString()}</span>
+              <span className="font-medium">{usage.completionTokens?.toLocaleString() ?? '0'}</span>
             </div>
           </div>
         </CardContent>

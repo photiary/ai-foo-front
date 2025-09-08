@@ -33,7 +33,7 @@ export function NutritionChart({ foods }: NutritionChartProps) {
       percentage: total > 0 ? ((totalFat / total) * 100).toFixed(1) : 0,
       color: '#ffc658'
     }
-  ]
+  ].filter(item => item.value > 0) // 0인 값들은 제외
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -50,69 +50,83 @@ export function NutritionChart({ foods }: NutritionChartProps) {
     return null
   }
 
-  if (total === 0) {
+  if (total === 0 || data.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>영양소 비율</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center text-muted-foreground py-8">
-            영양 정보가 없습니다.
+      <div className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs rounded-lg border p-6 h-full">
+        <div className="space-y-3">
+          <div className="text-sm text-muted-foreground">영양소 비율</div>
+          <div className="flex items-center gap-2 text-lg font-semibold">
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+            </svg>
+            영양 균형
           </div>
-        </CardContent>
-      </Card>
+          <div className="h-48 w-full flex items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              영양 정보가 없습니다.
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <CardTitle>영양소 비율</CardTitle>
-        <CardDescription>
-          <span className="@[540px]/card:block hidden">탄수화물, 단백질, 지방의 비율을 파이차트로 표시</span>
-          <span className="@[540px]/card:hidden">영양소 비율 차트</span>
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-        <div className="h-80">
+    <div className="bg-gradient-to-t from-primary/5 to-card dark:bg-card shadow-xs rounded-lg border p-6 h-full">
+      <div className="space-y-3">
+        <div className="text-sm text-muted-foreground">영양소 비율</div>
+        <div className="flex items-center gap-2 text-lg font-semibold">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+          </svg>
+          영양 균형
+        </div>
+        <div className="h-48 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
                 cx="50%"
                 cy="50%"
-                innerRadius={60}
-                outerRadius={120}
-                paddingAngle={5}
+                innerRadius={20}
+                outerRadius={50}
+                paddingAngle={1}
                 dataKey="value"
+                startAngle={90}
+                endAngle={450}
               >
                 {data.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />
-              <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
         
         {/* 영양소 요약 */}
-        <div className="grid grid-cols-3 gap-4 mt-6">
+        <div className="space-y-2">
           {data.map((item, index) => (
-            <div key={index} className="text-center">
-              <div 
-                className="w-4 h-4 rounded-full mx-auto mb-2"
-                style={{ backgroundColor: item.color }}
-              />
-              <div className="text-sm font-medium">{item.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {item.value.toFixed(1)}g ({item.percentage}%)
+            <div key={index} className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: item.color }}
+                />
+                <span className="font-medium">{item.name}</span>
               </div>
+              <span className="text-muted-foreground">
+                {item.percentage}%
+              </span>
             </div>
           ))}
         </div>
-      </CardContent>
-    </Card>
+        <div className="text-xs text-muted-foreground">
+          탄수화물, 단백질, 지방의 비율
+        </div>
+      </div>
+    </div>
   )
 }

@@ -19,7 +19,7 @@ export default function FoodAnalysisDetailPage() {
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string>('')
 
   useEffect(() => {
     const loadAnalysisDetail = async () => {
@@ -50,7 +50,6 @@ export default function FoodAnalysisDetailPage() {
 
     loadAnalysisDetail()
   }, [params.id])
-
 
   const handleBackToList = () => {
     router.push('/food/analysis/list')
