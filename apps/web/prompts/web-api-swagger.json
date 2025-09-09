@@ -60,7 +60,15 @@
           {
             "name": "status",
             "in": "query",
-            "required": true,
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "analysisMode",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "string"
             }
@@ -265,6 +273,9 @@
             "type": "string"
           },
           "suggestion": {
+            "type": "string"
+          },
+          "analysisMode": {
             "type": "string"
           },
           "usage": {

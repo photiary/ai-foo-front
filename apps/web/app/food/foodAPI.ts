@@ -1,12 +1,12 @@
 // **DO NOT EDIT. This is a template resource.**
 import { publicApi } from '@workspace/core/api'
-import type { 
+import type {
   FoodAnalysisResponse,
   FoodAnalysisListItem,
   FoodItem,
   Position,
   BillingInfo,
-  UsageInfo
+  UsageInfo,
 } from '@workspace/core/types'
 
 /**
@@ -24,14 +24,15 @@ export const fetchFoodAnalysisList = async () => {
  *
  * @param image 분석할 음식 이미지 파일
  * @param status 사용자 상태
+ * @param analysisMode 분석 모드
  * @returns FoodAnalysisResponse
  */
-export const postFoodAnalysis = async (image: File, status: string) => {
+export const postFoodAnalysis = async (image: File, status: string, analysisMode: string) => {
   const formData = new FormData()
   formData.append('image', image)
-  
+
   const response = await publicApi.post('/v1/food/analysis', formData, {
-    params: { status },
+    params: { status, analysisMode },
     headers: {
       'Content-Type': 'multipart/form-data',
     },

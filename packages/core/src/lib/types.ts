@@ -39,6 +39,7 @@ export interface FoodAnalysisResponse {
   billing: BillingInfo
   imageSize: string
   imageFileName: string
+  analysisMode: string
 }
 
 export interface FoodAnalysisListItem {
