@@ -32,8 +32,9 @@ export interface UsageInfo {
 export interface FoodAnalysisResponse {
   id: number
   foods: FoodItem[]
-  suitability: string
-  suggestion: string
+  userStatus: string | null
+  suitability: string | null
+  suggestion: string | null
   usage: UsageInfo
   billing: BillingInfo
   imageSize: string

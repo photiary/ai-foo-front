@@ -258,6 +258,9 @@
               "$ref": "#/components/schemas/FoodItem"
             }
           },
+          "userStatus": {
+            "type": "string"
+          },
           "suitability": {
             "type": "string"
           },
