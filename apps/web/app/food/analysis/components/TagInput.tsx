@@ -11,7 +11,7 @@ interface TagInputProps {
   placeholder?: string
 }
 
-export function TagInput({ tags, onTagsChange, placeholder = '입력하고 엔터를 눌러주세요' }: TagInputProps) {
+export function TagInput({ tags, onTagsChange, placeholder = '입력하고 쉼표를 눌러주세요' }: TagInputProps) {
   const [inputValue, setInputValue] = useState('')
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -40,7 +40,11 @@ export function TagInput({ tags, onTagsChange, placeholder = '입력하고 엔�
     <div className="relative">
       <div className="border-input focus-within:border-ring focus-within:ring-ring/50 flex min-h-9 flex-wrap items-center gap-2 rounded-md border bg-transparent px-1 py-1 focus-within:ring-[3px]">
         {tags.map((tag, index) => (
-          <Badge key={index} variant="secondary" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
+          <Badge
+            key={index}
+            variant="default"
+            className="flex items-center justify-center gap-1 bg-blue-100 px-2 py-1 text-xs text-blue-800 hover:bg-blue-200 dark:bg-blue-900 dark:text-blue-200 dark:hover:bg-blue-800"
+          >
             <span className="flex items-center">{tag}</span>
             <button
               onClick={() => removeTag(index)}
