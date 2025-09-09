@@ -1,24 +1,81 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription 
-} from '@workspace/ui/components/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@workspace/ui/components/dialog'
 
 const FOOD_EMOJIS = [
-  '🍎', '🍊', '🍌', '🍇', '🍓', '🍑', '🥝', '🍅',
-  '🥕', '🌽', '🥔', '🍠', '🥦', '🥬', '🥒', '🍄',
-  '🥜', '🌰', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳',
-  '🥓', '🍖', '🍗', '🦴', '🌭', '🍔', '🍟', '🍕',
-  '🥪', '🌮', '🌯', '🥙', '🧆', '🥚', '🍳', '🥞',
-  '🧇', '🥯', '🍞', '🥖', '🥨', '🧀', '🥛', '🍼',
-  '☕', '🍵', '🧃', '🥤', '🧊', '🍦', '🍧', '🍨',
-  '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬',
-  '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🍵', '🧃'
+  '🍎',
+  '🍊',
+  '🍌',
+  '🍇',
+  '🍓',
+  '🍑',
+  '🥝',
+  '🍅',
+  '🥕',
+  '🌽',
+  '🥔',
+  '🍠',
+  '🥦',
+  '🥬',
+  '🥒',
+  '🍄',
+  '🥜',
+  '🌰',
+  '🍞',
+  '🥖',
+  '🥨',
+  '🧀',
+  '🥚',
+  '🍳',
+  '🥓',
+  '🍖',
+  '🍗',
+  '🦴',
+  '🌭',
+  '🍔',
+  '🍟',
+  '🍕',
+  '🥪',
+  '🌮',
+  '🌯',
+  '🥙',
+  '🧆',
+  '🥚',
+  '🍳',
+  '🥞',
+  '🧇',
+  '🥯',
+  '🍞',
+  '🥖',
+  '🥨',
+  '🧀',
+  '🥛',
+  '🍼',
+  '☕',
+  '🍵',
+  '🧃',
+  '🥤',
+  '🧊',
+  '🍦',
+  '🍧',
+  '🍨',
+  '🍩',
+  '🍪',
+  '🎂',
+  '🍰',
+  '🧁',
+  '🥧',
+  '🍫',
+  '🍬',
+  '🍭',
+  '🍮',
+  '🍯',
+  '🍼',
+  '🥛',
+  '☕',
+  '🍵',
+  '🧃',
 ]
 
 interface LoadingComponentProps {
@@ -38,26 +95,22 @@ export function LoadingComponent({ open }: LoadingComponentProps) {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
-      <DialogContent 
-        className="max-w-md mx-auto"
+      <DialogContent
+        className="mx-auto w-auto max-w-sm"
         showCloseButton={false}
         onPointerDownOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="text-center text-xl font-bold text-primary">
-            🍽️ 음식 분석 중...
-          </DialogTitle>
+          <DialogTitle className="text-primary text-center text-xl font-bold">🍽️ 음식 분석 중...</DialogTitle>
           <DialogDescription className="text-center">
             AI가 음식을 분석하고 영양 정보를 추출하고 있습니다.
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="flex flex-col items-center justify-center py-8">
-          <div className="text-8xl mb-6 animate-bounce">
-            {FOOD_EMOJIS[currentEmoji]}
-          </div>
-          
+          <div className="mb-6 animate-bounce text-8xl">{FOOD_EMOJIS[currentEmoji]}</div>
+
           <p className="text-muted-foreground text-center">
             <span className="text-sm">최대 5분까지 소요될 수 있습니다.</span>
           </p>

@@ -54,7 +54,7 @@ const data = {
       icon: IconCamera,
     },
     {
-      title: '분석 목록',
+      title: '식사 분석 목록',
       url: '/food/analysis/list',
       icon: IconListDetails,
     },

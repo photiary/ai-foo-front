@@ -111,7 +111,7 @@ export default function FoodAnalysisListPage() {
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               {/* 헤더 섹션 */}
               <div className="px-4 lg:px-6">
-                <h1 className="mb-2 text-3xl font-bold">식사 이미지 분석 목록</h1>
+                <h1 className="mb-2 text-3xl font-bold">식사 분석 목록</h1>
                 <p className="text-muted-foreground">이전 분석 결과들을 확인하고 관리하세요</p>
               </div>
 
@@ -150,7 +150,7 @@ export default function FoodAnalysisListPage() {
                               <TableHead>모델명</TableHead>
                               <TableHead>이미지 크기</TableHead>
                               <TableHead>사용 토큰</TableHead>
-                              <TableHead>과금</TableHead>
+                              <TableHead>과금 USD (KRW ₩1,400 환율)</TableHead>
                               <TableHead>소요시간</TableHead>
                               <TableHead>생성일</TableHead>
                               <TableHead>액션</TableHead>

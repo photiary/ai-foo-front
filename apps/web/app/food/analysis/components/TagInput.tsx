@@ -11,7 +11,7 @@ interface TagInputProps {
   placeholder?: string
 }
 
-export function TagInput({ tags, onTagsChange, placeholder = "입력하고 쉼표를 눌러주세요" }: TagInputProps) {
+export function TagInput({ tags, onTagsChange, placeholder = '입력하고 엔터를 눌러주세요' }: TagInputProps) {
   const [inputValue, setInputValue] = useState('')
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -38,17 +38,13 @@ export function TagInput({ tags, onTagsChange, placeholder = "입력하고 쉼�
 
   return (
     <div className="relative">
-      <div className="flex flex-wrap items-center gap-2 min-h-9 px-1 py-1 border border-input rounded-md bg-transparent focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]">
+      <div className="border-input focus-within:border-ring focus-within:ring-ring/50 flex min-h-9 flex-wrap items-center gap-2 rounded-md border bg-transparent px-1 py-1 focus-within:ring-[3px]">
         {tags.map((tag, index) => (
-          <Badge
-            key={index}
-            variant="secondary"
-            className="flex items-center justify-center gap-1 px-2 py-1 text-xl"
-          >
+          <Badge key={index} variant="secondary" className="flex items-center justify-center gap-1 px-2 py-1 text-xs">
             <span className="flex items-center">{tag}</span>
             <button
               onClick={() => removeTag(index)}
-              className="flex items-center justify-center hover:bg-destructive/20 rounded-full p-0.5"
+              className="hover:bg-destructive/20 flex items-center justify-center rounded-full p-0.5"
               type="button"
             >
               <X className="h-3 w-3" />
@@ -60,8 +56,8 @@ export function TagInput({ tags, onTagsChange, placeholder = "입력하고 쉼�
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={addTag}
-          placeholder={tags.length === 0 ? placeholder : ""}
-          className="flex-1 min-w-[120px] outline-none bg-transparent text-sm placeholder:text-muted-foreground"
+          placeholder={tags.length === 0 ? placeholder : ''}
+          className="placeholder:text-muted-foreground min-w-[120px] flex-1 bg-transparent text-sm outline-none"
         />
       </div>
     </div>
