@@ -15,6 +15,8 @@ interface FoodAnalysisResultProps {
 }
 
 export function FoodAnalysisResult({ analysisResult, imageUrl }: FoodAnalysisResultProps) {
+  const isImgOnlyMode = analysisResult.analysisMode === 'IMG_ONLY'
+
   return (
     <>
       {/* 음식 이미지와 라벨 표시 */}
@@ -25,8 +27,9 @@ export function FoodAnalysisResult({ analysisResult, imageUrl }: FoodAnalysisRes
       {/* 음식 목록 */}
       <FoodList foods={analysisResult.foods} />
 
-      {/* AI 제안과 영양 정보를 같은 행에 배치 */}
-      <div className="px-4 lg:px-6">
+      {/* IMG_ONLY 모드가 아닌 경우에만 AI 제안과 영양 정보 표시 */}
+      {!isImgOnlyMode && (
+        <div className="px-4 lg:px-6">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
           {/* 식사의 적합성 - 25% */}
           <div className="lg:col-span-1">
@@ -119,8 +122,9 @@ export function FoodAnalysisResult({ analysisResult, imageUrl }: FoodAnalysisRes
           </div>
         </div>
       </div>
+      )}
 
-      {/* 사용량 및 과금 정보 */}
+      {/* 사용량 및 과금 정보 - 모든 모드에서 표시 */}
       <UsageInfo usage={analysisResult.usage} billing={analysisResult.billing} />
     </>
   )

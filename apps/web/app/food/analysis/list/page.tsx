@@ -9,13 +9,14 @@ import { AppSidebar } from '@/components/template/app-sidebar'
 import { SiteHeader } from '@/components/template/site-header'
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
-import { Eye, Clock, CreditCard, Zap } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@workspace/ui/components/tooltip'
+import { Eye, Clock, CreditCard, Zap, Utensils, ClipboardPlus } from 'lucide-react'
 import { fetchFoodAnalysisList } from '../../foodAPI'
 import type { FoodAnalysisListItem, FoodAnalysisResponse } from '@workspace/core/types'
 import { formatCost, formatDuration, formatDate } from '@/lib/formatUtils'
 
 // FoodAnalysisResponse를 FoodAnalysisListItem으로 변환하는 함수
-const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem => {
+const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem & { analysisMode: string } => {
   return {
     id: response.id,
     modelName: response.usage?.modelName,
@@ -25,11 +26,12 @@ const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem
     totalTokens: response.usage?.totalTokens,
     totalCost: response.billing?.totalCost,
     createdAt: new Date().toISOString(), // 기본값 또는 실제 생성일
+    analysisMode: response.analysisMode,
   }
 }
 
 export default function FoodAnalysisListPage() {
-  const [analysisList, setAnalysisList] = useState<FoodAnalysisListItem[]>([])
+  const [analysisList, setAnalysisList] = useState<(FoodAnalysisListItem & { analysisMode: string })[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -147,6 +149,7 @@ export default function FoodAnalysisListPage() {
                           <TableHeader>
                             <TableRow>
                               <TableHead>ID</TableHead>
+                              <TableHead className="w-16"></TableHead>
                               <TableHead>모델명</TableHead>
                               <TableHead>이미지 크기</TableHead>
                               <TableHead>사용 토큰</TableHead>
@@ -164,6 +167,30 @@ export default function FoodAnalysisListPage() {
                                 onClick={() => handleRowClick(item.id)}
                               >
                                 <TableCell className="font-medium">#{item.id}</TableCell>
+                                <TableCell>
+                                  <div className="flex justify-center">
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="cursor-help">
+                                            {item.analysisMode === 'IMG_ONLY' ? (
+                                              <Utensils className="text-muted-foreground h-5 w-5" />
+                                            ) : (
+                                              <ClipboardPlus className="text-muted-foreground h-5 w-5" />
+                                            )}
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>
+                                            {item.analysisMode === 'IMG_ONLY'
+                                              ? '식사 이미지 분석만'
+                                              : '식사 이미지 분석과 사용자 상태에 따라 제안'}
+                                          </p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
+                                </TableCell>
                                 <TableCell>
                                   <Badge variant="outline">{item.modelName || 'N/A'}</Badge>
                                 </TableCell>

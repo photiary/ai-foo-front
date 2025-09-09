@@ -17,17 +17,20 @@ import { Label } from '@workspace/ui/components/label'
 import { AppSidebar } from '@/components/template/app-sidebar'
 import { SiteHeader } from '@/components/template/site-header'
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
-import { Play, RotateCcw } from 'lucide-react'
+import { Play, RotateCcw, Utensils, ClipboardPlus } from 'lucide-react'
 import { postFoodAnalysis } from '../foodAPI'
 import type { FoodAnalysisResponse } from '@workspace/core/types'
 import { FoodAnalysisResult } from './components/FoodAnalysisResult'
 import { LoadingComponent } from '@/app/food/analysis/components/LoadingComponent'
 import { TagInput } from './components/TagInput'
 
+type AnalysisMode = 'IMG_ONLY' | 'IMG_SUGG'
+
 export default function FoodAnalysisPage() {
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [userStatus, setUserStatus] = useState<string[]>([])
+  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('IMG_SUGG')
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -49,8 +52,13 @@ export default function FoodAnalysisPage() {
   }
 
   const handleAnalyze = async () => {
-    if (!image || userStatus.length === 0) {
-      setError('이미지와 사용자 상태를 모두 입력해주세요.')
+    if (!image) {
+      setError('이미지를 입력해주세요.')
+      return
+    }
+
+    if (analysisMode === 'IMG_SUGG' && userStatus.length === 0) {
+      setError('사용자 상태를 입력해주세요.')
       return
     }
 
@@ -58,7 +66,7 @@ export default function FoodAnalysisPage() {
     setError(null)
 
     try {
-      const result = await postFoodAnalysis(image, userStatus.join(','))
+      const result = await postFoodAnalysis(image, userStatus.join(','), analysisMode)
       setAnalysisResult(result)
     } catch (err) {
       setError('분석 중 오류가 발생했습니다.')
@@ -72,6 +80,7 @@ export default function FoodAnalysisPage() {
     setImage(null)
     setImagePreview(null)
     setUserStatus([])
+    setAnalysisMode('IMG_SUGG')
     setAnalysisResult(null)
     setError(null)
     if (fileInputRef.current) {
@@ -100,22 +109,54 @@ export default function FoodAnalysisPage() {
                 <p className="text-muted-foreground">음식 사진을 업로드하고 영양 정보를 분석해보세요</p>
               </div>
 
-              {/* 사용자 상태 입력 섹션 */}
+              {/* 분석 모드 선택 섹션 */}
               <div className="px-4 lg:px-6">
                 <Card className="@container/card">
                   <CardHeader>
-                    <CardTitle>사용자 상태</CardTitle>
-                    <CardDescription>현재 상태를 입력하여 더 정확한 분석을 받으세요</CardDescription>
+                    <CardTitle>분석 모드</CardTitle>
+                    <CardDescription>원하는 분석 방식을 선택하세요</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <TagInput
-                      tags={userStatus}
-                      onTagsChange={setUserStatus}
-                      placeholder="상태를 입력하고 쉼표로 구분하세요 (예: 다이어트, 운동중)"
-                    />
+                    <div className="flex gap-4">
+                      <Button
+                        variant={analysisMode === 'IMG_SUGG' ? 'default' : 'outline'}
+                        onClick={() => setAnalysisMode('IMG_SUGG')}
+                        className="flex-1"
+                      >
+                        <ClipboardPlus className="mr-2 h-4 w-4" />
+                        식사 이미지 분석 + AI 식사 제안
+                      </Button>
+                      <Button
+                        variant={analysisMode === 'IMG_ONLY' ? 'default' : 'outline'}
+                        onClick={() => setAnalysisMode('IMG_ONLY')}
+                        className="flex-1"
+                      >
+                        <Utensils className="mr-2 h-4 w-4" />
+                        식사 이미지 분석만
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
+
+              {/* 사용자 상태 입력 섹션 - IMG_SUGG 모드에서만 표시 */}
+              {analysisMode === 'IMG_SUGG' && (
+                <div className="px-4 lg:px-6">
+                  <Card className="@container/card">
+                    <CardHeader>
+                      <CardTitle>사용자 상태</CardTitle>
+                      <CardDescription>현재 상태를 입력하여 더 정확한 분석을 받으세요</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <TagInput
+                        tags={userStatus}
+                        onTagsChange={setUserStatus}
+                        placeholder="상태를 입력하고 쉼표로 구분하세요 (예: 다이어트, 운동중)"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
 
               {/* 이미지 업로드 섹션 */}
               <div className="px-4 lg:px-6">
@@ -156,7 +197,7 @@ export default function FoodAnalysisPage() {
                 <div className="flex justify-center gap-6">
                   <Button
                     onClick={handleAnalyze}
-                    disabled={!image || userStatus.length === 0 || isLoading}
+                    disabled={!image || (analysisMode === 'IMG_SUGG' && userStatus.length === 0) || isLoading}
                     size="lg"
                     className="px-8 py-3"
                   >
@@ -201,7 +242,7 @@ async function resizeImage(file: File, maxSize: number): Promise<File> {
   return new Promise((resolve) => {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')!
-    const img = new Image()
+    const img = new window.Image()
 
     img.onload = () => {
       const { width, height } = img
