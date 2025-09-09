@@ -24,8 +24,8 @@ export function FoodAnalysisResult({ analysisResult, imageUrl }: FoodAnalysisRes
         <FoodImageDisplay imageUrl={imageUrl} foods={analysisResult.foods} imageSize={analysisResult.imageSize} />
       </div>
 
-      {/* 음식 목록 */}
-      <FoodList foods={analysisResult.foods} />
+      {/* 음식 목록 - IMG_ONLY 모드가 아닌 경우에만 표시 */}
+      {!isImgOnlyMode && <FoodList foods={analysisResult.foods} />}
 
       {/* IMG_ONLY 모드가 아닌 경우에만 AI 제안과 영양 정보 표시 */}
       {!isImgOnlyMode && (

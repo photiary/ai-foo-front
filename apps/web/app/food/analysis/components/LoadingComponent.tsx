@@ -108,7 +108,7 @@ export function LoadingComponent({ open }: LoadingComponentProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col items-center justify-center py-8">
+        <div className="flex flex-col items-center justify-center pt-8">
           <div className="mb-6 animate-bounce text-8xl">{FOOD_EMOJIS[currentEmoji]}</div>
 
           <p className="text-muted-foreground text-center">
