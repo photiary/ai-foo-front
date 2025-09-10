@@ -30,7 +30,7 @@ export default function FoodAnalysisPage() {
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [userStatus, setUserStatus] = useState<string[]>([])
-  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('IMG_SUGG')
+  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('IMG_ONLY')
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -80,7 +80,7 @@ export default function FoodAnalysisPage() {
     setImage(null)
     setImagePreview(null)
     setUserStatus([])
-    setAnalysisMode('IMG_SUGG')
+    setAnalysisMode('IMG_ONLY')
     setAnalysisResult(null)
     setError(null)
     if (fileInputRef.current) {
@@ -119,20 +119,20 @@ export default function FoodAnalysisPage() {
                   <CardContent>
                     <div className="flex gap-4">
                       <Button
-                        variant={analysisMode === 'IMG_SUGG' ? 'default' : 'outline'}
-                        onClick={() => setAnalysisMode('IMG_SUGG')}
-                        className="flex-1"
-                      >
-                        <ClipboardPlus className="mr-2 h-4 w-4" />
-                        식사 이미지 분석 + AI 식사 제안
-                      </Button>
-                      <Button
                         variant={analysisMode === 'IMG_ONLY' ? 'default' : 'outline'}
                         onClick={() => setAnalysisMode('IMG_ONLY')}
                         className="flex-1"
                       >
                         <Utensils className="mr-2 h-4 w-4" />
                         식사 이미지 분석만
+                      </Button>
+                      <Button
+                        variant={analysisMode === 'IMG_SUGG' ? 'default' : 'outline'}
+                        onClick={() => setAnalysisMode('IMG_SUGG')}
+                        className="flex-1"
+                      >
+                        <ClipboardPlus className="mr-2 h-4 w-4" />
+                        식사 이미지 분석 + AI 식사 제안
                       </Button>
                     </div>
                   </CardContent>

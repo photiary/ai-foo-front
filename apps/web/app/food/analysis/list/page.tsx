@@ -25,7 +25,7 @@ const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem
     requestDurationMs: response.usage?.requestDurationMs,
     totalTokens: response.usage?.totalTokens,
     totalCost: response.billing?.totalCost,
-    createdAt: new Date().toISOString(), // 기본값 또는 실제 생성일
+    createdAt: response.createdAt,
     analysisMode: response.analysisMode,
   }
 }

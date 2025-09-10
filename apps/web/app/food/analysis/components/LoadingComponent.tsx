@@ -103,9 +103,7 @@ export function LoadingComponent({ open }: LoadingComponentProps) {
       >
         <DialogHeader>
           <DialogTitle className="text-primary text-center text-xl font-bold">🍽️ 음식 분석 중...</DialogTitle>
-          <DialogDescription className="text-center">
-            AI가 음식을 분석하고 영양 정보를 추출하고 있습니다.
-          </DialogDescription>
+          <DialogDescription className="text-center">AI가 음식을 분석하고 정보를 추출하고 있습니다.</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col items-center justify-center pt-8">

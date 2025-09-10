@@ -40,6 +40,7 @@ export interface FoodAnalysisResponse {
   imageSize: string
   imageFileName: string
   analysisMode: string
+  createdAt: string
 }
 
 export interface FoodAnalysisListItem {
