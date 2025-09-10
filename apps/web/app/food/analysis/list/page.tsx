@@ -10,13 +10,20 @@ import { SiteHeader } from '@/components/template/site-header'
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@workspace/ui/components/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@workspace/ui/components/tooltip'
-import { Eye, Clock, CreditCard, Zap, Utensils, ClipboardPlus } from 'lucide-react'
+import { Eye, Clock, CreditCard, Zap, Utensils, ClipboardPlus, CheckCircle, XCircle } from 'lucide-react'
 import { fetchFoodAnalysisList } from '../../foodAPI'
 import type { FoodAnalysisListItem, FoodAnalysisResponse } from '@workspace/core/types'
 import { formatCost, formatDuration, formatDate } from '@/lib/formatUtils'
 
+// NG 상태를 확인하는 함수 (모든 음식의 X와 Y가 < 512이면 OK, 하나라도 >= 512이면 NG)
+const isNG = (foods: any[]): boolean => {
+  return foods.some((food) => food.position.x >= 512 || food.position.y >= 512)
+}
+
 // FoodAnalysisResponse를 FoodAnalysisListItem으로 변환하는 함수
-const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem & { analysisMode: string } => {
+const convertToListItem = (
+  response: FoodAnalysisResponse
+): FoodAnalysisListItem & { analysisMode: string; foods: any[] } => {
   return {
     id: response.id,
     modelName: response.usage?.modelName,
@@ -27,11 +34,14 @@ const convertToListItem = (response: FoodAnalysisResponse): FoodAnalysisListItem
     totalCost: response.billing?.totalCost,
     createdAt: response.createdAt,
     analysisMode: response.analysisMode,
+    foods: response.foods,
   }
 }
 
 export default function FoodAnalysisListPage() {
-  const [analysisList, setAnalysisList] = useState<(FoodAnalysisListItem & { analysisMode: string })[]>([])
+  const [analysisList, setAnalysisList] = useState<(FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]>(
+    []
+  )
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -150,6 +160,7 @@ export default function FoodAnalysisListPage() {
                             <TableRow>
                               <TableHead>ID</TableHead>
                               <TableHead className="w-16"></TableHead>
+                              <TableHead className="w-16"></TableHead>
                               <TableHead>모델명</TableHead>
                               <TableHead>이미지 크기</TableHead>
                               <TableHead>사용 토큰</TableHead>
@@ -167,6 +178,26 @@ export default function FoodAnalysisListPage() {
                                 onClick={() => handleRowClick(item.id)}
                               >
                                 <TableCell className="font-medium">#{item.id}</TableCell>
+                                <TableCell>
+                                  <div className="flex justify-center">
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="cursor-help">
+                                            {isNG(item.foods) ? (
+                                              <XCircle className="h-5 w-5 text-red-500" />
+                                            ) : (
+                                              <CheckCircle className="h-5 w-5 text-green-500" />
+                                            )}
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>{isNG(item.foods) ? '이미지 밖 라벨 표시' : '이미지 안 라벨 표시'}</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
+                                </TableCell>
                                 <TableCell>
                                   <div className="flex justify-center">
                                     <TooltipProvider>

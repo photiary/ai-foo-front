@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@workspace/ui/components/card'
 import { Badge } from '@workspace/ui/components/badge'
-import { Clock, CreditCard, Zap } from 'lucide-react'
+import { Button } from '@workspace/ui/components/button'
+import { Clock, CreditCard, Zap, HelpCircle } from 'lucide-react'
 import type { UsageInfo, BillingInfo } from '@workspace/core/types'
 import { formatCost, formatDuration } from '@/lib/formatUtils'
 
@@ -53,7 +54,17 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
       {/* 과금 정보 */}
       <Card className="@container/card lg:col-span-2">
         <CardHeader>
-          <CardDescription>과금 정보</CardDescription>
+          <CardDescription className="flex items-center gap-2">
+            과금 정보
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-4 w-4 p-0"
+              onClick={() => window.open('https://platform.openai.com/docs/pricing', '_blank')}
+            >
+              <HelpCircle className="h-3 w-3" />
+            </Button>
+          </CardDescription>
           <CardTitle className="@[250px]/card:text-3xl flex items-center gap-2 text-2xl font-semibold tabular-nums">
             <CreditCard className="h-5 w-5" />
             {formatCost(billing.totalCost, billing.currency)}
