@@ -242,6 +242,9 @@
           "inputCost": {
             "type": "number"
           },
+          "cachedInputCost": {
+            "type": "number"
+          },
           "outputCost": {
             "type": "number"
           },
@@ -277,6 +280,10 @@
           },
           "analysisMode": {
             "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           },
           "usage": {
             "$ref": "#/components/schemas/UsageInfo"
@@ -344,6 +351,10 @@
             "format": "int32"
           },
           "totalTokens": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cachedTokens": {
             "type": "integer",
             "format": "int32"
           },

@@ -16,6 +16,7 @@ export interface FoodItem {
 
 export interface BillingInfo {
   inputCost: number
+  cachedInputCost: number
   outputCost: number
   totalCost: number
   currency: string
@@ -23,6 +24,7 @@ export interface BillingInfo {
 
 export interface UsageInfo {
   promptTokens: number
+  cachedTokens: number
   completionTokens: number
   totalTokens: number
   modelName: string
