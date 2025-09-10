@@ -17,7 +17,12 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
       {/* Token 사용량 */}
       <Card className="@container/card lg:col-span-1">
         <CardHeader>
-          <CardDescription>Token 사용량</CardDescription>
+          <CardDescription>
+            <div className="flex justify-between">
+              <span>Token 사용량</span>
+              <Badge variant="outline">{usage.modelName}</Badge>
+            </div>
+          </CardDescription>
           <CardTitle className="@[250px]/card:text-3xl flex items-center gap-2 text-2xl font-semibold tabular-nums">
             <Zap className="h-5 w-5" />
             {usage.totalTokens?.toLocaleString() ?? '0'}
@@ -26,12 +31,12 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
         <CardContent>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-muted-foreground text-sm">모델</span>
-              <Badge variant="outline">{usage.modelName}</Badge>
-            </div>
-            <div className="flex justify-between">
               <span className="text-muted-foreground text-sm">입력 토큰</span>
               <span className="font-medium">{usage.promptTokens?.toLocaleString() ?? '0'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground text-sm">입력 토큰 (Cached)</span>
+              <span className="font-medium">{usage.cachedTokens?.toLocaleString() ?? '0'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground text-sm">출력 토큰</span>
@@ -61,6 +66,10 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
               <span className="font-medium">{formatCost(billing.inputCost, billing.currency)}</span>
             </div>
             <div className="flex justify-between">
+              <span className="text-muted-foreground text-sm">입력 비용 (Cached)</span>
+              <span className="font-medium">{formatCost(billing.cachedInputCost, billing.currency)}</span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-muted-foreground text-sm">출력 비용</span>
               <span className="font-medium">{formatCost(billing.outputCost, billing.currency)}</span>
             </div>
@@ -81,11 +90,6 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
             {formatDuration(usage.requestDurationMs)}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-center">
-            <p className="text-muted-foreground text-sm">AI 분석 완료까지</p>
-          </div>
-        </CardContent>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">처리 시간</div>
           <div className="text-muted-foreground">이미지 분석부터 결과 반환까지</div>
