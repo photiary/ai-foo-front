@@ -179,7 +179,7 @@ export default function FoodAnalysisPage() {
                       />
                     </div>
 
-                    {imagePreview && (
+                    {imagePreview && !analysisResult && (
                       <div className="mt-4">
                         <img
                           src={imagePreview}

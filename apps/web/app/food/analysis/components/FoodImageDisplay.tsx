@@ -17,31 +17,31 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
 
   useEffect(() => {
     if (!imageUrl) return
-    
+
     const img = new Image()
     img.onload = () => {
       setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
-      
+
       // 표시된 이미지의 실제 크기 계산
       const imgElement = img
       const maxWidth = 1024 // 최대 1024px로 제한
       const maxHeight = 1024 // 최대 1024px로 제한
       const aspectRatio = img.naturalWidth / img.naturalHeight
-      
+
       let displayWidth = img.naturalWidth
       let displayHeight = img.naturalHeight
-      
+
       // 가로와 세로 모두 1024px를 초과하지 않도록 조정
       if (displayWidth > maxWidth) {
         displayWidth = maxWidth
         displayHeight = maxWidth / aspectRatio
       }
-      
+
       if (displayHeight > maxHeight) {
         displayHeight = maxHeight
         displayWidth = maxHeight * aspectRatio
       }
-      
+
       setDisplayDimensions({ width: displayWidth, height: displayHeight })
     }
     img.src = imageUrl
@@ -50,10 +50,10 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
   // 이미지 크기 비율 계산
   const getScaleRatio = () => {
     if (!imageDimensions || !displayDimensions) return { scaleX: 1, scaleY: 1 }
-    
+
     return {
       scaleX: displayDimensions.width / imageDimensions.width,
-      scaleY: displayDimensions.height / imageDimensions.height
+      scaleY: displayDimensions.height / imageDimensions.height,
     }
   }
 
@@ -65,20 +65,16 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
         <CardTitle>분석된 음식 이미지</CardTitle>
         <CardDescription>
           AI가 인식한 음식들의 위치가 표시됩니다
-          {imageSize && (
-            <span className="ml-2 text-sm text-muted-foreground">
-              (원본 크기: {imageSize})
-            </span>
-          )}
+          {imageSize && <span className="text-muted-foreground ml-2 text-sm">(원본 크기: {imageSize})</span>}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex justify-center">
         {imageUrl ? (
           <div className="relative inline-block">
             <img
               src={imageUrl}
               alt="분석된 음식 이미지"
-              className="max-w-full h-auto rounded-lg shadow-md"
+              className="h-auto max-w-full rounded-lg shadow-md"
               style={{ maxWidth: '1024px', maxHeight: '1024px' }}
             />
             {/* 음식 라벨 오버레이 */}
@@ -92,17 +88,14 @@ export function FoodImageDisplay({ imageUrl, foods, imageSize }: FoodImageDispla
                   transform: 'translate(-50%, -100%)',
                 }}
               >
-                <Badge
-                  variant="default"
-                  className="bg-primary/90 text-primary-foreground shadow-lg"
-                >
+                <Badge variant="default" className="bg-primary/90 text-primary-foreground shadow-lg">
                   {food.name}
                 </Badge>
               </div>
             ))}
           </div>
         ) : (
-          <div className="flex items-center justify-center h-64 bg-muted rounded-lg">
+          <div className="bg-muted flex h-64 items-center justify-center rounded-lg">
             <p className="text-muted-foreground">이미지를 불러올 수 없습니다.</p>
           </div>
         )}
