@@ -14,7 +14,6 @@ import {
 import { Badge } from '@workspace/ui/components/badge'
 import { Input } from '@workspace/ui/components/input'
 import { Label } from '@workspace/ui/components/label'
-import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@workspace/ui/components/hover-card'
 import { AppSidebar } from '@/components/template/app-sidebar'
 import { SiteHeader } from '@/components/template/site-header'
@@ -151,32 +150,35 @@ export default function FoodAnalysisPage() {
               </div>
 
               {/* 모델 선택 섹션 */}
-              <div className="px-4 lg:px-6">
-                <Card className="@container/card">
+              <div className="overflow-visible px-4 lg:px-6">
+                <Card className="@container/card overflow-visible">
                   <CardHeader>
                     <CardTitle>AI 모델 선택</CardTitle>
                     <CardDescription>분석에 사용할 AI 모델을 선택하세요</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <RadioGroup value={selectedModel} onValueChange={setSelectedModel} className="flex flex-wrap gap-6">
+                  <CardContent className="overflow-visible">
+                    <div className="flex flex-wrap gap-4">
                       {MODEL_OPTIONS.map((option) => (
-                        <div key={option.value} className="flex items-center gap-3">
-                          <RadioGroupItem value={option.value} id={option.value}/>
-                          <Label htmlFor={option.value} className="cursor-pointer">
-                            <HoverCard>
-                              <HoverCardTrigger asChild>
-                                <Badge variant="outline" className="hover:bg-accent">
-                                  {option.label}
-                                </Badge>
-                              </HoverCardTrigger>
-                              <HoverCardContent>
-                                <ModelPricingCard modelName={option.value} />
-                              </HoverCardContent>
-                            </HoverCard>
-                          </Label>
-                        </div>
+                        <HoverCard key={option.value}>
+                          <HoverCardTrigger asChild>
+                            <Badge
+                              variant={selectedModel === option.value ? 'default' : 'outline'}
+                              className={`cursor-pointer ${
+                                selectedModel === option.value
+                                  ? 'hover:bg-primary/90 hover:text-primary-foreground'
+                                  : 'hover:bg-accent'
+                              }`}
+                              onClick={() => setSelectedModel(option.value)}
+                            >
+                              {option.label}
+                            </Badge>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-80">
+                            <ModelPricingCard modelName={option.value} />
+                          </HoverCardContent>
+                        </HoverCard>
                       ))}
-                    </RadioGroup>
+                    </div>
                   </CardContent>
                 </Card>
               </div>

@@ -41,7 +41,7 @@ export function ModelPricingCard({ modelName }: ModelPricingCardProps) {
 
   return (
     <Card className="w-64">
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle className="text-sm font-medium">
           <Badge variant="outline" className="text-xs">
             {modelName}
@@ -50,11 +50,11 @@ export function ModelPricingCard({ modelName }: ModelPricingCardProps) {
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="font-medium text-muted-foreground">Input</div>
+          <div className="text-muted-foreground font-medium">Input</div>
           <div className="text-right font-mono">{pricing.input}</div>
-          <div className="font-medium text-muted-foreground">Cached input</div>
+          <div className="text-muted-foreground font-medium">Cached input</div>
           <div className="text-right font-mono">{pricing.cachedInput}</div>
-          <div className="font-medium text-muted-foreground">Output</div>
+          <div className="text-muted-foreground font-medium">Output</div>
           <div className="text-right font-mono">{pricing.output}</div>
         </div>
       </CardContent>

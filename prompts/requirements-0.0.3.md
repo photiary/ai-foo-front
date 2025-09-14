@@ -4,8 +4,8 @@
 - URL: /food/analysis
 
 - LLM 모델 선택 기능을 추가한다.
-- `RadioGroup` 컴포넌트를 사용한다.
 - `UsageInfo.tsx` 컴포넌트와 같이 model를 표시할 때는 `Badge` 컴포넌트를 사용
+- 선택 활성화 색상 표시
 - Model 마우스 오버시 모델 과금 정보 카드를 표시
 - 선택 항목은 다음과 같다.
   - `gpt-5-mini`
