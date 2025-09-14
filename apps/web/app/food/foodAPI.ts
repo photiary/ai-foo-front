@@ -25,14 +25,15 @@ export const fetchFoodAnalysisList = async () => {
  * @param image 분석할 음식 이미지 파일
  * @param status 사용자 상태
  * @param analysisMode 분석 모드
+ * @param modelName LLM 모델
  * @returns FoodAnalysisResponse
  */
-export const postFoodAnalysis = async (image: File, status: string, analysisMode: string) => {
+export const postFoodAnalysis = async (image: File, status: string, analysisMode: string, modelName: string) => {
   const formData = new FormData()
   formData.append('image', image)
 
   const response = await publicApi.post('/v1/food/analysis', formData, {
-    params: { status, analysisMode },
+    params: { status, analysisMode, modelName },
     headers: {
       'Content-Type': 'multipart/form-data',
     },

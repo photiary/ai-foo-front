@@ -14,6 +14,8 @@ import {
 import { Badge } from '@workspace/ui/components/badge'
 import { Input } from '@workspace/ui/components/input'
 import { Label } from '@workspace/ui/components/label'
+import { RadioGroup, RadioGroupItem } from '@workspace/ui/components/radio-group'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@workspace/ui/components/hover-card'
 import { AppSidebar } from '@/components/template/app-sidebar'
 import { SiteHeader } from '@/components/template/site-header'
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
@@ -23,14 +25,22 @@ import type { FoodAnalysisResponse } from '@workspace/core/types'
 import { FoodAnalysisResult } from './components/FoodAnalysisResult'
 import { LoadingComponent } from '@/app/food/analysis/components/LoadingComponent'
 import { TagInput } from './components/TagInput'
+import { ModelPricingCard } from './components/ModelPricingCard'
 
 type AnalysisMode = 'IMG_ONLY' | 'IMG_SUGG'
+
+const MODEL_OPTIONS = [
+  { value: 'local-model', label: 'Local Model' },
+  { value: 'gpt-5-mini', label: 'GPT-5 Mini' },
+  { value: 'gpt-5', label: 'GPT-5' },
+]
 
 export default function FoodAnalysisPage() {
   const [image, setImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [userStatus, setUserStatus] = useState<string[]>([])
   const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('IMG_ONLY')
+  const [selectedModel, setSelectedModel] = useState<string>('local-model')
   const [analysisResult, setAnalysisResult] = useState<FoodAnalysisResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -66,7 +76,7 @@ export default function FoodAnalysisPage() {
     setError(null)
 
     try {
-      const result = await postFoodAnalysis(image, userStatus.join(','), analysisMode)
+      const result = await postFoodAnalysis(image, userStatus.join(','), analysisMode, selectedModel)
       setAnalysisResult(result)
     } catch (err) {
       setError('분석 중 오류가 발생했습니다.')
@@ -81,6 +91,7 @@ export default function FoodAnalysisPage() {
     setImagePreview(null)
     setUserStatus([])
     setAnalysisMode('IMG_ONLY')
+    setSelectedModel('local-model')
     setAnalysisResult(null)
     setError(null)
     if (fileInputRef.current) {
@@ -135,6 +146,37 @@ export default function FoodAnalysisPage() {
                         식사 이미지 분석 + AI 식사 제안
                       </Button>
                     </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* 모델 선택 섹션 */}
+              <div className="px-4 lg:px-6">
+                <Card className="@container/card">
+                  <CardHeader>
+                    <CardTitle>AI 모델 선택</CardTitle>
+                    <CardDescription>분석에 사용할 AI 모델을 선택하세요</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <RadioGroup value={selectedModel} onValueChange={setSelectedModel} className="flex flex-wrap gap-6">
+                      {MODEL_OPTIONS.map((option) => (
+                        <div key={option.value} className="flex items-center gap-3">
+                          <RadioGroupItem value={option.value} id={option.value}/>
+                          <Label htmlFor={option.value} className="cursor-pointer">
+                            <HoverCard>
+                              <HoverCardTrigger asChild>
+                                <Badge variant="outline" className="hover:bg-accent">
+                                  {option.label}
+                                </Badge>
+                              </HoverCardTrigger>
+                              <HoverCardContent>
+                                <ModelPricingCard modelName={option.value} />
+                              </HoverCardContent>
+                            </HoverCard>
+                          </Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
                   </CardContent>
                 </Card>
               </div>

@@ -72,6 +72,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "modelName",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {

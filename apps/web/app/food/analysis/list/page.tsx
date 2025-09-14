@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@workspace/ui/components/card'
 import { Badge } from '@workspace/ui/components/badge'
 import { Button } from '@workspace/ui/components/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@workspace/ui/components/select'
 import { AppSidebar } from '@/components/template/app-sidebar'
 import { SiteHeader } from '@/components/template/site-header'
 import { SidebarInset, SidebarProvider } from '@workspace/ui/components/sidebar'
@@ -38,10 +39,21 @@ const convertToListItem = (
   }
 }
 
+const MODEL_FILTER_OPTIONS = [
+  { value: 'all', label: '모든 모델' },
+  { value: 'gpt-5', label: 'GPT-5' },
+  { value: 'gpt-5-mini', label: 'GPT-5 Mini' },
+  { value: 'local-model', label: 'Local Model' },
+]
+
 export default function FoodAnalysisListPage() {
   const [analysisList, setAnalysisList] = useState<(FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]>(
     []
   )
+  const [filteredList, setFilteredList] = useState<(FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]>(
+    []
+  )
+  const [selectedModelFilter, setSelectedModelFilter] = useState<string>('all')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -61,6 +73,7 @@ export default function FoodAnalysisListPage() {
         const convertedData = isFoodAnalysisResponseArray(responseData) ? responseData.map(convertToListItem) : []
 
         setAnalysisList(convertedData)
+        setFilteredList(convertedData)
       } catch (err) {
         setError('분석 목록을 불러오는 중 오류가 발생했습니다.')
         console.error('List loading error:', err)
@@ -71,6 +84,20 @@ export default function FoodAnalysisListPage() {
 
     loadAnalysisList()
   }, [])
+
+  // 모델 필터링 로직
+  useEffect(() => {
+    if (selectedModelFilter === 'all') {
+      setFilteredList(analysisList)
+    } else {
+      const filtered = analysisList.filter((item) => item.modelName === selectedModelFilter)
+      setFilteredList(filtered)
+    }
+  }, [selectedModelFilter, analysisList])
+
+  const handleModelFilterChange = (value: string) => {
+    setSelectedModelFilter(value)
+  }
 
   const handleRowClick = (id: number) => {
     router.push(`/food/analysis/${id}`)
@@ -127,6 +154,37 @@ export default function FoodAnalysisListPage() {
                 <p className="text-muted-foreground">이전 분석 결과들을 확인하고 관리하세요</p>
               </div>
 
+              {/* 필터 섹션 */}
+              <div className="px-4 lg:px-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>필터</CardTitle>
+                    <CardDescription>원하는 조건으로 분석 결과를 필터링하세요</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <label htmlFor="model-filter" className="text-sm font-medium">
+                          모델:
+                        </label>
+                        <Select value={selectedModelFilter} onValueChange={handleModelFilterChange}>
+                          <SelectTrigger id="model-filter" className="w-40">
+                            <SelectValue placeholder="모델 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {MODEL_FILTER_OPTIONS.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
               {/* 에러 메시지 */}
               {error && (
                 <div className="px-4 lg:px-6">
@@ -143,10 +201,10 @@ export default function FoodAnalysisListPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>분석 기록</CardTitle>
-                    <CardDescription>총 {analysisList.length}개의 분석 결과가 있습니다</CardDescription>
+                    <CardDescription>총 {filteredList.length}개의 분석 결과가 있습니다</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {analysisList.length === 0 ? (
+                    {filteredList.length === 0 ? (
                       <div className="py-8 text-center">
                         <p className="text-muted-foreground">아직 분석 결과가 없습니다.</p>
                         <Button className="mt-4" onClick={() => router.push('/food/analysis')}>
@@ -171,7 +229,7 @@ export default function FoodAnalysisListPage() {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {analysisList.map((item) => (
+                            {filteredList.map((item) => (
                               <TableRow
                                 key={item.id}
                                 className="hover:bg-muted/50 cursor-pointer"
