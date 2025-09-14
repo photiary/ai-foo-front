@@ -160,6 +160,7 @@ export default function FoodAnalysisPage() {
                     <div className="flex flex-wrap gap-4">
                       {MODEL_OPTIONS.map((option) => (
                         <Badge
+                          key={option.value}
                           variant={selectedModel === option.value ? 'default' : 'outline'}
                           className={`cursor-pointer ${
                             selectedModel === option.value
