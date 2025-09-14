@@ -15,6 +15,7 @@ import { Eye, Clock, CreditCard, Zap, Utensils, ClipboardPlus, CheckCircle, XCir
 import { fetchFoodAnalysisList } from '../../foodAPI'
 import type { FoodAnalysisListItem, FoodAnalysisResponse } from '@workspace/core/types'
 import { formatCost, formatDuration, formatDate } from '@/lib/formatUtils'
+import { StatsCards } from '../components/StatsCards'
 
 // NG 상태를 확인하는 함수 (모든 음식의 X와 Y가 < 512이면 OK, 하나라도 >= 512이면 NG)
 const isNG = (foods: any[]): boolean => {
@@ -43,21 +44,25 @@ const convertToListItem = (
 const createModelFilterOptions = (analysisList: (FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]) => {
   // analysisList에서 고유한 modelName 값들을 추출 (undefined 제외)
   const uniqueModelNames = Array.from(
-    new Set(analysisList.map(item => item.modelName).filter((modelName): modelName is string => Boolean(modelName)))
+    new Set(analysisList.map((item) => item.modelName).filter((modelName): modelName is string => Boolean(modelName)))
   )
-  
+
   // 기본 옵션과 동적 옵션을 결합
   const options = [
     { value: 'all', label: '모든 모델' },
-    ...uniqueModelNames.map(modelName => ({
+    ...uniqueModelNames.map((modelName) => ({
       value: modelName,
-      label: modelName === 'gpt-5' ? 'GPT-5' : 
-             modelName === 'gpt-5-mini' ? 'GPT-5 Mini' : 
-             modelName === 'local-model' ? 'Local Model' : 
-             modelName
-    }))
+      label:
+        modelName === 'gpt-5'
+          ? 'GPT-5'
+          : modelName === 'gpt-5-mini'
+            ? 'GPT-5 Mini'
+            : modelName === 'local-model'
+              ? 'Local Model'
+              : modelName,
+    })),
   ]
-  
+
   return options
 }
 
@@ -69,6 +74,7 @@ export default function FoodAnalysisListPage() {
     []
   )
   const [selectedModelFilter, setSelectedModelFilter] = useState<string>('all')
+  const [selectedAnalysisModeFilter, setSelectedAnalysisModeFilter] = useState<string>('all')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -100,18 +106,29 @@ export default function FoodAnalysisListPage() {
     loadAnalysisList()
   }, [])
 
-  // 모델 필터링 로직
+  // 필터링 로직
   useEffect(() => {
-    if (selectedModelFilter === 'all') {
-      setFilteredList(analysisList)
-    } else {
-      const filtered = analysisList.filter((item) => item.modelName === selectedModelFilter)
-      setFilteredList(filtered)
+    let filtered = analysisList
+
+    // 모델 필터링
+    if (selectedModelFilter !== 'all') {
+      filtered = filtered.filter((item) => item.modelName === selectedModelFilter)
     }
-  }, [selectedModelFilter, analysisList])
+
+    // 분석 모드 필터링
+    if (selectedAnalysisModeFilter !== 'all') {
+      filtered = filtered.filter((item) => item.analysisMode === selectedAnalysisModeFilter)
+    }
+
+    setFilteredList(filtered)
+  }, [selectedModelFilter, selectedAnalysisModeFilter, analysisList])
 
   const handleModelFilterChange = (value: string) => {
     setSelectedModelFilter(value)
+  }
+
+  const handleAnalysisModeFilterChange = (value: string) => {
+    setSelectedAnalysisModeFilter(value)
   }
 
   const handleRowClick = (id: number) => {
@@ -169,6 +186,13 @@ export default function FoodAnalysisListPage() {
                 <p className="text-muted-foreground">이전 분석 결과들을 확인하고 관리하세요</p>
               </div>
 
+              {/* 통계 카드 섹션 */}
+              {filteredList.length > 0 && (
+                <div className="px-4 lg:px-6">
+                  <StatsCards data={filteredList} />
+                </div>
+              )}
+
               {/* 필터 섹션 */}
               <div className="px-4 lg:px-6">
                 <Card>
@@ -177,13 +201,13 @@ export default function FoodAnalysisListPage() {
                     <CardDescription>원하는 조건으로 분석 결과를 필터링하세요</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center gap-4">
                       <div className="flex items-center space-x-2">
                         <label htmlFor="model-filter" className="pr-2 text-sm font-medium">
                           모델:
                         </label>
                         <Select value={selectedModelFilter} onValueChange={handleModelFilterChange}>
-                          <SelectTrigger id="model-filter" className="w-40">
+                          <SelectTrigger id="model-filter" className="w-48">
                             <SelectValue placeholder="모델 선택" />
                           </SelectTrigger>
                           <SelectContent>
@@ -192,6 +216,21 @@ export default function FoodAnalysisListPage() {
                                 {option.label}
                               </SelectItem>
                             ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <label htmlFor="analysis-mode-filter" className="pr-2 text-sm font-medium">
+                          분석 모드:
+                        </label>
+                        <Select value={selectedAnalysisModeFilter} onValueChange={handleAnalysisModeFilterChange}>
+                          <SelectTrigger id="analysis-mode-filter" className="w-48">
+                            <SelectValue placeholder="분석 모드 선택" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">모든 모드</SelectItem>
+                            <SelectItem value="IMG_ONLY">식사 이미지 분석만</SelectItem>
+                            <SelectItem value="IMG_SUGG">식사 이미지 분석 + AI 식사 제안</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -236,7 +275,7 @@ export default function FoodAnalysisListPage() {
                               <TableHead className="w-16"></TableHead>
                               <TableHead>모델</TableHead>
                               <TableHead>이미지 크기</TableHead>
-                              <TableHead>사용 토큰</TableHead>
+                              <TableHead>Token 사용량</TableHead>
                               <TableHead>과금 USD (KRW ₩1,400 환율)</TableHead>
                               <TableHead>소요시간</TableHead>
                               <TableHead>생성일</TableHead>

@@ -3,7 +3,7 @@
 - 도메인: apps/web/app/food
 - URL: /food/analysis
 
-- cachedTokens '입력 토큰(Cached)' 항목 추가하여 표시
+- cachedTokens '입력 Token(Cached)' 항목 추가하여 표시
 - cachedInputCost '입력 비용(Cached)' 항목 추가하여 표시
 
 # 페이지: 식사 이미지 분석 목록
@@ -23,7 +23,7 @@
 - 도메인: apps/web/app/food
 - URL: /food/analysis/{id}
 
-- cachedTokens '입력 토큰(Cached)' 항목 추가하여 표시
+- cachedTokens '입력 Token(Cached)' 항목 추가하여 표시
 - cachedInputCost '입력 비용(Cached)' 항목 추가하여 표시
 
 - 과금 정보 바로 오른쪽에 ? 아이콘을 추가하고 클릭하면 새탭 열기로 'https://platform.openai.com/docs/pricing' 표신한다.

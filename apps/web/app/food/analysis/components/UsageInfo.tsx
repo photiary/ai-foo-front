@@ -32,22 +32,22 @@ export function UsageInfo({ usage, billing }: UsageInfoProps) {
         <CardContent>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-muted-foreground text-sm">입력 토큰</span>
+              <span className="text-muted-foreground text-sm">입력 Token</span>
               <span className="font-medium">{usage.promptTokens?.toLocaleString() ?? '0'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground text-sm">입력 토큰 (Cached)</span>
+              <span className="text-muted-foreground text-sm">입력 Token (Cached)</span>
               <span className="font-medium">{usage.cachedTokens?.toLocaleString() ?? '0'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground text-sm">출력 토큰</span>
+              <span className="text-muted-foreground text-sm">출력 Token</span>
               <span className="font-medium">{usage.completionTokens?.toLocaleString() ?? '0'}</span>
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">AI 모델 사용량</div>
-          <div className="text-muted-foreground">분석에 사용된 총 토큰 수</div>
+          <div className="text-muted-foreground">분석에 사용된 총 Token 수</div>
         </CardFooter>
       </Card>
 
