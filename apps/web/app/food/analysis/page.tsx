@@ -159,24 +159,17 @@ export default function FoodAnalysisPage() {
                   <CardContent className="overflow-visible">
                     <div className="flex flex-wrap gap-4">
                       {MODEL_OPTIONS.map((option) => (
-                        <HoverCard key={option.value}>
-                          <HoverCardTrigger asChild>
-                            <Badge
-                              variant={selectedModel === option.value ? 'default' : 'outline'}
-                              className={`cursor-pointer ${
-                                selectedModel === option.value
-                                  ? 'hover:bg-primary/90 hover:text-primary-foreground'
-                                  : 'hover:bg-accent'
-                              }`}
-                              onClick={() => setSelectedModel(option.value)}
-                            >
-                              {option.label}
-                            </Badge>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-80">
-                            <ModelPricingCard modelName={option.value} />
-                          </HoverCardContent>
-                        </HoverCard>
+                        <Badge
+                          variant={selectedModel === option.value ? 'default' : 'outline'}
+                          className={`cursor-pointer ${
+                            selectedModel === option.value
+                              ? 'hover:bg-primary/90 hover:text-primary-foreground'
+                              : 'hover:bg-accent'
+                          }`}
+                          onClick={() => setSelectedModel(option.value)}
+                        >
+                          {option.label}
+                        </Badge>
                       ))}
                     </div>
                   </CardContent>

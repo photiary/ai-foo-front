@@ -39,12 +39,27 @@ const convertToListItem = (
   }
 }
 
-const MODEL_FILTER_OPTIONS = [
-  { value: 'all', label: '모든 모델' },
-  { value: 'gpt-5', label: 'GPT-5' },
-  { value: 'gpt-5-mini', label: 'GPT-5 Mini' },
-  { value: 'local-model', label: 'Local Model' },
-]
+// 동적으로 모델 필터 옵션을 생성하는 함수
+const createModelFilterOptions = (analysisList: (FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]) => {
+  // analysisList에서 고유한 modelName 값들을 추출 (undefined 제외)
+  const uniqueModelNames = Array.from(
+    new Set(analysisList.map(item => item.modelName).filter((modelName): modelName is string => Boolean(modelName)))
+  )
+  
+  // 기본 옵션과 동적 옵션을 결합
+  const options = [
+    { value: 'all', label: '모든 모델' },
+    ...uniqueModelNames.map(modelName => ({
+      value: modelName,
+      label: modelName === 'gpt-5' ? 'GPT-5' : 
+             modelName === 'gpt-5-mini' ? 'GPT-5 Mini' : 
+             modelName === 'local-model' ? 'Local Model' : 
+             modelName
+    }))
+  ]
+  
+  return options
+}
 
 export default function FoodAnalysisListPage() {
   const [analysisList, setAnalysisList] = useState<(FoodAnalysisListItem & { analysisMode: string; foods: any[] })[]>(
@@ -164,7 +179,7 @@ export default function FoodAnalysisListPage() {
                   <CardContent>
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center space-x-2">
-                        <label htmlFor="model-filter" className="text-sm font-medium">
+                        <label htmlFor="model-filter" className="pr-2 text-sm font-medium">
                           모델:
                         </label>
                         <Select value={selectedModelFilter} onValueChange={handleModelFilterChange}>
@@ -172,7 +187,7 @@ export default function FoodAnalysisListPage() {
                             <SelectValue placeholder="모델 선택" />
                           </SelectTrigger>
                           <SelectContent>
-                            {MODEL_FILTER_OPTIONS.map((option) => (
+                            {createModelFilterOptions(analysisList).map((option) => (
                               <SelectItem key={option.value} value={option.value}>
                                 {option.label}
                               </SelectItem>
@@ -219,7 +234,7 @@ export default function FoodAnalysisListPage() {
                               <TableHead>ID</TableHead>
                               <TableHead className="w-16"></TableHead>
                               <TableHead className="w-16"></TableHead>
-                              <TableHead>모델명</TableHead>
+                              <TableHead>모델</TableHead>
                               <TableHead>이미지 크기</TableHead>
                               <TableHead>사용 토큰</TableHead>
                               <TableHead>과금 USD (KRW ₩1,400 환율)</TableHead>
