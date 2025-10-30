@@ -1,31 +1,33 @@
-# shadcn/ui monorepo template
+# Open AI LLM을 활용한 식사 이미지 분석
 
-This template is for creating a monorepo with shadcn/ui.
+- 사용자의 상태와 식사이미지를 분석하여, 식사 정보(이름, 이미지상 위치, 칼로리, 탄단지)와 AI 시단 제안을 제공
+- 이미지 분석에 사용한 Token 사용량을 제공
 
-## Usage
+![feature-001.png](docs/images/feature-001.png)
 
-```bash
-pnpm dlx shadcn@latest init
+![feature-002.png](docs/images/feature-002.png)
+
+## 🍕 주요 라이브러리
+
+- React
+- Next.js
+- shadcn/ui
+- Tailwindcss
+
+## 🍔 주요 리소스 구조
+
+``` 
+root
+├─ .curosr.rules             # AI-Agent 가이드라인 프롬프트
+├─ prompts                   # 기능 프롬프트
+├─ apps.web
+│  ├─ app.food               # 식사 이미지 분석  
+│  └─ prompts                # API Swagger json 프롬프트
+└─ packages                  # Core 패키지, shadcn/ui 패키지 
 ```
 
-## Adding components
+## 🍟 어플리케이션 실행
 
-To add components to your app, run the following command at the root of your `web` app:
-
-```bash
-pnpm dlx shadcn@latest add button -c apps/web
 ```
-
-This will place the ui components in the `packages/ui/src/components` directory.
-
-## Tailwind
-
-Your `tailwind.config.ts` and `globals.css` are already set up to use the components from the `ui` package.
-
-## Using components
-
-To use the components in your app, import them from the `ui` package.
-
-```tsx
-import { Button } from '@workspace/ui/components/button'
+pnpm dev
 ```
